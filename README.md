@@ -1,6 +1,6 @@
 # Usability Testing Pipeline
 
-A folder-based multi-agent setup for analyzing moderated usability tests (think-aloud protocol) against an existing website or app, and generating structured UX insights. Drop in your interview data and website export, run agents step by step, review outputs at each stage, and end up with a traceable, stakeholder-ready research report.
+A folder-based multi-agent setup for analyzing moderated usability tests (think-aloud protocol) against an existing website or app, and generating structured UX insights. Drop in your interview data and website export(s), run agents step by step, review outputs at each stage, and end up with a traceable, stakeholder-ready research report.
 
 **Scope**: This pipeline is built for usability testing against a concrete UI (the Extractor parses actual website HTML, and every observation is mapped to Nielsen severity + a specific UI element). It is not suited for generative/exploratory research without a concrete interface to test against (e.g. needs interviews, foundational research).
 
@@ -26,7 +26,7 @@ Takes raw interview transcripts, observer notes, and the website's HTML export a
 
 - [Claude Code](https://claude.ai/code) installed and running
 - Interview data in `.md`, `.txt`, or `.vtt` (WebVTT) format
-- Website saved as a complete HTML file (File → Save As in browser)
+- Each page participants will interact with saved as a complete HTML file (File → Save As in browser, once per page). A single homepage export only covers what's on that page — if your test tasks send participants to other pages, export those too.
 
 ---
 
@@ -34,7 +34,7 @@ Takes raw interview transcripts, observer notes, and the website's HTML export a
 
 1. **Duplicate this folder** — copy the entire `ux-research-analysis/` folder and rename it for your project
 2. **Edit `config.md`** — set your project name, product description, and analysis output language
-3. **Add your website to `input/ui-mockup/`** — save the website as a complete HTML page and drop it in; replace the existing file
+3. **Add your website to `input/ui-mockup/`** — save each relevant page as a complete HTML page and drop them all in; replace any existing files
 4. **Say `"Extractor, analyze UI"`** — generates `input/ui_context.md` from the actual website code; review and correct if needed
 5. **Replace `input/interview_guide.md`** — paste in your interview protocol or testing script
 6. **Add interview data** to `input/interviews/` — one subfolder per participant:
@@ -73,13 +73,13 @@ Pipeline status and "what's next" don't require a dedicated agent — `CLAUDE.md
 
 **Say:** `"Extractor, analyze UI"`
 
-Reads the HTML file in `input/ui-mockup/`, parses the navigation structure, pages, components, and interactive elements, and writes `input/ui_context.md`. This gives all downstream agents a shared vocabulary — consistent component names across every coded observation, theme, insight, and report.
+Reads **every** HTML file in `input/ui-mockup/` — one per page you exported — parses the navigation structure across all of them, plus each page's components and interactive elements, and writes `input/ui_context.md`. This gives all downstream agents a shared vocabulary — consistent component names across every coded observation, theme, insight, and report.
 
 **Output:** `input/ui_context.md`
 
-**You review:** Check that navigation labels, page names, and component names match what you see in the actual interface. You can manually add context the HTML alone can't reveal — known bugs, staging-only limitations, or components not visible in the saved export.
+**You review:** Check that navigation labels, page names, and component names match what you see in the actual interface. Look for a "Missing Page Exports" section — if a page referenced by your test tasks has no HTML export, add it to `input/ui-mockup/` and re-run before starting Coding. You can also manually add context the HTML alone can't reveal — known bugs, staging-only limitations, or components not visible in the saved export.
 
-Re-run with the same command, `"Extractor, analyze UI"`, if the website changes between research rounds — it overwrites `input/ui_context.md` completely rather than appending.
+Re-run with the same command, `"Extractor, analyze UI"`, if the website changes or you add/remove a page export between research rounds — it overwrites `input/ui_context.md` completely rather than appending, re-scanning all current HTML files from scratch.
 
 ---
 
@@ -340,9 +340,11 @@ ux-research-analysis/
 │   ├── interpreter.md           ← insight synthesis prompt
 │   └── reporter.md              ← report assembly prompt
 ├── input/
-│   ├── ui-mockup/                ← website HTML export ("User Interface Mockup")
-│   │   ├── [website].html       ← save the website here (File → Save As)
-│   │   └── [website]_files/     ← static assets (created automatically on save)
+│   ├── ui-mockup/                ← website HTML exports ("User Interface Mockup") — one .html per page tested
+│   │   ├── [home-page].html     ← save each relevant page here (File → Save As)
+│   │   ├── [home-page]_files/   ← static assets (created automatically on save)
+│   │   ├── [sub-page].html      ← e.g. a product page, checkout, etc. — only if participants navigate there
+│   │   └── [sub-page]_files/
 │   ├── interview_guide.md       ← your testing script / interview protocol
 │   ├── ui_context.md            ← auto-generated by Extractor; can be manually edited
 │   └── interviews/
@@ -366,7 +368,7 @@ ux-research-analysis/
 
 1. Duplicate this folder
 2. Edit `config.md` (project name, product description, output language)
-3. Replace the HTML in `input/ui-mockup/` with the new project's website export
+3. Replace the HTML in `input/ui-mockup/` with the new project's website export(s) — one file per page participants will interact with
 4. Say `"Extractor, analyze UI"` to regenerate `input/ui_context.md`
 5. Replace `input/interview_guide.md` with the new interview protocol
 6. Add participant folders to `input/interviews/`

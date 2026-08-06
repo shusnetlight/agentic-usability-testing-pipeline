@@ -53,7 +53,7 @@ This project analyzes moderated usability test data (think-aloud protocol, teste
 
 ## Quick Start
 
-1. Add your website export (HTML) to `input/ui-mockup/` — this is the "User Interface Mockup"
+1. Add your website export(s) (HTML) to `input/ui-mockup/` — this is the "User Interface Mockup". Save one HTML export per page participants will interact with (File → Save As in browser, on each relevant page) — a single homepage export only covers what's visible on that page, not the pages it links to
 2. Say **"Extractor, analyze UI"** → generates `input/ui_context.md` from the actual website
 3. Put your interview guide in `input/interview_guide.md`
 4. Edit `config.md` with your project details — including **"Analysis output"** under Language to set the output language (e.g. German, English, French)
@@ -86,16 +86,17 @@ Pipeline status and "what's next" is not a separate agent — it's handled autom
 
 **What happens:** A single agent using the prompt from `agents/extractor.md`:
 1. Reads `config.md` for the project name and output language
-2. Scans `input/ui-mockup/` for HTML files and reads the website export
-3. Parses the navigation structure, page names, key components, and interactive elements
+2. Scans `input/ui-mockup/` for **all** HTML files (one per page you exported) and reads each one
+3. Parses the navigation structure across all of them, plus page names, key components, and interactive elements for each page
 4. Writes `input/ui_context.md` — a shared vocabulary and component map for all downstream agents
 
-**Re-run when**: The UI has changed since the last extraction, or you add a new website export.
+**Re-run when**: The UI has changed since the last extraction, or you add/remove a page export.
 
 **Review before proceeding.** Check that:
-- All navigation tabs and pages are correctly identified
+- All pages you exported are represented, and their navigation links to each other are correctly identified
 - Component names match what you see in the actual interface
 - The Naming Conventions table covers everything a participant is likely to touch
+- If `ui_context.md` has a "Missing Page Exports" section, add the missing HTML export(s) and re-run before continuing — otherwise the Coder won't have a canonical name for anything on that page
 
 You can manually edit `input/ui_context.md` after extraction to add context the HTML alone can't reveal (e.g. known bugs, intentionally disabled features in staging).
 
@@ -270,7 +271,7 @@ If a naming mismatch actually needs a fix in a coded file (not in `ui_context.md
 
 1. Duplicate this entire folder
 2. Edit `config.md` with your new project details
-3. Replace the HTML in `input/ui-mockup/` with the new project's website export
+3. Replace the HTML in `input/ui-mockup/` with the new project's website export(s) — one file per page participants will interact with
 4. Say "Extractor, analyze UI" to regenerate `input/ui_context.md`
 5. Replace `input/interview_guide.md` with the new interview protocol
 6. Add participant folders to `input/interviews/`

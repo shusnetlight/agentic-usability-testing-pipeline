@@ -22,8 +22,8 @@ The Extractor ensures `input/ui_context.md` reflects the **actual interface** ra
 
 ## Input
 
-The HTML file(s) in `input/ui-mockup/`. This is typically a static export saved from the browser (File → Save as complete webpage). It contains:
-- The full rendered HTML structure
+The HTML file(s) in `input/ui-mockup/`. Each `.html` file is typically a static export saved from the browser (File → Save as complete webpage) of **one page** that participants will interact with during testing — a homepage, a product listing page, a checkout page, etc. If the test tasks send participants across multiple pages, `input/ui-mockup/` should contain one HTML export per relevant page, not just the homepage. Each export contains:
+- The full rendered HTML structure of that page
 - Navigation elements, page sections, component markup
 - Link targets, tab names, button labels, form fields
 - Possibly CSS class names that reveal component roles
@@ -32,13 +32,17 @@ The HTML file(s) in `input/ui-mockup/`. This is typically a static export saved 
 
 ### Step 1: Scan input/ui-mockup/ for HTML files
 
-List the files in `input/ui-mockup/`. Identify the primary HTML file (usually the largest `.html` file). Read it.
+List **every** `.html` file in `input/ui-mockup/` — do not assume there is only one, and do not skip any as "probably not relevant." Read all of them. Each file represents one page or view of the platform.
+
+If there is only one `.html` file, that's fine — it just means the test scope is a single page/view. If there are multiple, treat each as a separate page in Step 3, and use their cross-links to build the Navigation Structure in Step 2. Note in the file header (Output Format below) which source file each page came from, so it's traceable.
+
+If a test task refers to a page for which no HTML export exists in `input/ui-mockup/`, say so explicitly in a note at the end of `ui_context.md` rather than guessing at that page's content — the researcher needs to know to add that export before Coding starts, or that page's UI elements will be missing from the Naming Conventions table entirely.
 
 ### Step 2: Parse the navigation structure
 
-Identify:
-- Primary navigation (tabs, sidebar items, top-level links)
-- What page each navigation item leads to
+Identify, across all HTML files together:
+- Primary navigation (tabs, sidebar items, top-level links) — this should be consistent across pages; if it differs between exports, note the discrepancy rather than silently picking one version
+- What page each navigation item leads to (cross-reference against the other HTML files you read — a link's target page should match one of the exports you have, if that page was included)
 - Any secondary navigation within pages (sub-tabs, filter tabs, breadcrumbs)
 
 Extract the exact labels as they appear in the UI — these become the canonical names used across the entire analysis.
@@ -75,7 +79,7 @@ Write to `input/ui_context.md`:
 ```markdown
 # UI Context: [Project Name]
 
-**Extracted from**: `input/ui-mockup/[filename]`
+**Extracted from**: `input/ui-mockup/[filename1]`, `input/ui-mockup/[filename2]`, ... (list every HTML file read)
 **Extraction date**: [today's date]
 
 ---
@@ -103,6 +107,7 @@ Write to `input/ui_context.md`:
 
 ### [Page Name]
 
+**Source file**: `input/ui-mockup/[filename]`
 **Accessed via**: [Navigation label]
 **Purpose**: [What the user does here — 1 sentence]
 
@@ -146,7 +151,13 @@ Use these exact component names when writing coded observations. Format: `Page >
 
 ## Known UI States
 
-[List any non-default UI states visible in the export: empty states, error states, loading placeholders, disabled elements. These are relevant when a participant's confusion may be caused by a state rather than a design flaw.]
+[List any non-default UI states visible in the HTML exports: empty states, error states, loading placeholders, disabled elements. These are relevant when a participant's confusion may be caused by a state rather than a design flaw.]
+
+---
+
+## Missing Page Exports
+
+[Only include this section if applicable. List any page referenced by a navigation link or by the interview guide's tasks for which no HTML export exists in `input/ui-mockup/`. State the page name and where it was referenced from. The researcher needs to add the missing export before Coding — otherwise that page's UI elements won't appear in the Naming Conventions table, and coded observations about it won't have a canonical name to use.]
 ```
 
 ## Rules
@@ -157,4 +168,5 @@ Use these exact component names when writing coded observations. Format: `Page >
 4. **The Naming Conventions table is the most important section.** Coders will copy-paste from it. Include every element a participant is likely to touch during the test tasks.
 5. **Do not include design critique.** No opinions about whether the UI is good or bad — that is the job of the analysis pipeline.
 6. **Overwrite `input/ui_context.md` completely.** Do not append.
-7. **When re-run:** If `input/ui_context.md` already exists, overwrite it. The HTML is the source of truth.
+7. **When re-run:** If `input/ui_context.md` already exists, overwrite it. Re-scan **all** current `.html` files in `input/ui-mockup/` from scratch — don't assume the set of pages is the same as last time. If a page export was added or removed since the last run, this run's `ui_context.md` should reflect that. The HTML is the source of truth.
+8. **Don't guess at a page you don't have.** If a page is referenced (by navigation or by the interview guide) but no HTML export exists for it, list it under Missing Page Exports instead of inventing plausible-sounding content for it.
