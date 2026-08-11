@@ -32,7 +32,7 @@ Takes raw interview transcripts, observer notes, and the website's HTML export a
 
 ## Setup for a new project
 
-1. **Duplicate this folder** — copy the entire `ux-research-analysis/` folder and rename it for your project
+1. **Duplicate this folder** — copy the entire `agentic-usability-testing-pipeline/` folder and rename it for your project
 2. **Edit `config.md`** — set your project name, product description, and analysis output language
 3. **Add your website to `input/ui-mockup/`** — save each relevant page as a complete HTML page and drop them all in; replace any existing files
 4. **Say `"Extractor, analyze UI"`** — generates `input/ui_context.md` from the actual website code; review and correct if needed
@@ -327,7 +327,7 @@ Sections (from `templates/report_template.md`, headers translated into the Analy
 ## File reference
 
 ```
-ux-research-analysis/
+agentic-usability-testing-pipeline/
 ├── README.md                    ← you are here
 ├── CLAUDE.md                    ← loaded automatically by Claude Code; pipeline instructions
 ├── config.md                    ← edit per project: name, description, output language
