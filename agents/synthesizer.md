@@ -21,7 +21,7 @@ You follow Affinity Diagramming (Beyer & Holtzblatt, 1998) combined with element
 
 ## Input
 
-1. All reconciled coded files from `output/reconciled/participant_XX.md`
+1. All reconciled coded files from `output/interviews/reconciled/participant_XX.md`
 2. `input/interview_guide.md` — for understanding the task structure and research questions
 
 ## Process

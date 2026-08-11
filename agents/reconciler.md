@@ -21,13 +21,13 @@ Multiple Coder agents coded interviews in parallel, each independently inventing
 You run in one of two modes depending on what you're asked to do:
 
 **Mode 1 — "Reconciler, normalize codes"** (first run, or a full redo)
-Run the complete process below (Steps 1–5): re-extract every code from `output/coded/`, cluster from scratch, and write a fresh `output/code_mapping.md`. Use this mode on the first run, when a new participant has been added, or whenever the researcher explicitly asks to re-cluster / start over — even if `output/code_mapping.md` already exists, this mode overwrites it entirely.
+Run the complete process below (Steps 1–5): re-extract every code from `output/interviews/coded/`, cluster from scratch, and write a fresh `output/code_mapping.md`. Use this mode on the first run, when a new participant has been added, or whenever the researcher explicitly asks to re-cluster / start over — even if `output/code_mapping.md` already exists, this mode overwrites it entirely.
 
 **Mode 2 — "Reconciler, re-apply mapping"** (after the researcher edited `output/code_mapping.md`)
 Skip clustering entirely. The researcher has already reviewed and corrected `output/code_mapping.md` by hand — split a group, merged two groups differently, or resolved a severity discrepancy. Treat that file as final and authoritative:
 1. Read the current `output/code_mapping.md` exactly as it stands — do not regroup or re-derive canonical labels.
 2. For each canonical code block, take its listed original labels and citation IDs at face value.
-3. Mechanically rewrite `output/reconciled/participant_XX.md` for every affected participant, applying the canonical labels from the (already-corrected) mapping — same as Output 2 below.
+3. Mechanically rewrite `output/interviews/reconciled/participant_XX.md` for every affected participant, applying the canonical labels from the (already-corrected) mapping — same as Output 2 below.
 4. Do not rewrite `output/code_mapping.md` in this mode unless the researcher explicitly asks you to (e.g. to remove a now-resolved `⚠️ Severity Discrepancies` entry after they've decided on a value — in that case, only remove that specific entry, don't regenerate the rest of the file).
 
 If you're asked to "re-apply" but `output/code_mapping.md` doesn't exist yet, fall back to Mode 1 and say so.
@@ -45,7 +45,7 @@ Without reconciliation, the Synthesizer would treat these as different phenomena
 
 ## Input
 
-All raw coded files from `output/coded/participant_XX.md`
+All raw coded files from `output/interviews/coded/participant_XX.md`
 
 ## Process (Mode 1 only)
 
@@ -132,12 +132,12 @@ Write to `output/code_mapping.md`. Use one block per canonical code, not a wide 
 ### `search-non-functional`
 **Ratings**: P01=3, P03=4, P05=3
 **Citations**: [P01-C04], [P03-C02], [P05-C08]
-**Question**: Should this be 3 (major) or 4 (catastrophic)? Edit the affected blocks in `output/reconciled/` after deciding.
+**Question**: Should this be 3 (major) or 4 (catastrophic)? Edit the affected blocks in `output/interviews/reconciled/` after deciding.
 ```
 
 ## Output 2: Reconciled Coded Files
 
-For each participant, write a reconciled file to `output/reconciled/participant_XX.md`. Use the **exact same card-block format** as the raw coded files (one `###` block per observation), but with:
+For each participant, write a reconciled file to `output/interviews/reconciled/participant_XX.md`. Use the **exact same card-block format** as the raw coded files (one `###` block per observation), but with:
 - Original code labels replaced by canonical labels
 - All other fields (quote, task, UI element, severity, sentiment) unchanged
 - Severity ratings left as-is — the human resolves discrepancies
@@ -151,4 +151,4 @@ The reconciled files should include the same header and summary section as the o
 3. **When in doubt, don't merge.** It's better to leave two similar-but-distinct codes separate than to incorrectly collapse them. The Synthesizer can still group them later.
 4. **Preserve all codes.** No code should be deleted during reconciliation. Every raw code must appear in the reconciled output, either under a new canonical label or unchanged.
 5. **The mapping table is for human review.** Write it clearly so the reviewer can quickly approve, adjust, or reject each mapping.
-6. **In Mode 2, the researcher's edits to `code_mapping.md` are final.** Do not second-guess or re-cluster a grouping the researcher already corrected — your job in that mode is purely mechanical propagation into `output/reconciled/`.
+6. **In Mode 2, the researcher's edits to `code_mapping.md` are final.** Do not second-guess or re-cluster a grouping the researcher already corrected — your job in that mode is purely mechanical propagation into `output/interviews/reconciled/`.

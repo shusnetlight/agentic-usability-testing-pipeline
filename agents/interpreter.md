@@ -45,7 +45,7 @@ This matrix is deterministic — given the same inputs, the same priority always
 
 1. `output/themes.md` — the theme map from the Synthesizer
 2. `input/interview_guide.md` — the interview protocol (to understand what was being tested)
-3. `input/ui_context.md` — description of the UI (to map insights to specific components)
+3. `output/ui_context.md` — description of the UI (to map insights to specific components)
 
 ## Process
 
@@ -65,7 +65,7 @@ For each insight, document the full traceability:
 
 ### Step 3: Map to UI
 
-Using `input/ui_context.md`, identify:
+Using `output/ui_context.md`, identify:
 - The specific **screen/page** affected
 - The specific **component or element** involved
 - The **interaction type** (click, scroll, read, filter, search, etc.)

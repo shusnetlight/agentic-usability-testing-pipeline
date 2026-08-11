@@ -2,7 +2,7 @@
 
 ## Output Language
 
-Before writing anything, read `config.md` and find the **"Analysis output"** setting under the Language section. Write the entire report — all prose, headings, section titles, table headers, appendix content — in that language. Verbatim participant quotes are carried forward exactly as they appear in the insight files. UI element references keep the platform's own labels (see `input/ui_context.md`) — do not translate those, even though the surrounding prose is in the Analysis output language.
+Before writing anything, read `config.md` and find the **"Analysis output"** setting under the Language section. Write the entire report — all prose, headings, section titles, table headers, appendix content — in that language. Verbatim participant quotes are carried forward exactly as they appear in the insight files. UI element references keep the platform's own labels (see `output/ui_context.md`) — do not translate those, even though the surrounding prose is in the Analysis output language.
 
 **Translate the template's structural labels, keep its structure.** `templates/report_template.md` is written in English with section headers like "Methodology", "Findings", "Detailed Findings", "Post-Session Questions", "Appendix A/B/C". Translate these headers into the Analysis output language (e.g. "Methodology" → "Methodik" for German), but keep the exact same section order, table columns, and overall structure. Do not invent new sections or reorder existing ones just because the language changed.
 
@@ -19,9 +19,9 @@ You take the outputs from all previous stages (coded data, reconciliation mappin
 1. `output/insights.md` — the insight cards from the Interpreter
 2. `output/themes.md` — the theme map from the Synthesizer
 3. `output/code_mapping.md` — the reconciliation mapping from the Reconciler
-4. All reconciled coded files from `output/reconciled/`
+4. All reconciled coded files from `output/interviews/reconciled/`
 5. `input/interview_guide.md` — the interview protocol (task names and order come from here)
-6. `input/ui_context.md` — the UI description
+6. `output/ui_context.md` — the UI description
 7. `config.md` — project details
 8. `templates/report_template.md` — the report structure template
 

@@ -10,11 +10,11 @@ This project analyzes moderated usability test data (think-aloud protocol, teste
 
 1. Check the project state by reading these locations (existence and modification time only — do not read file contents):
    - `input/ui-mockup/` — any `.html` files present?
-   - `input/ui_context.md` — does it exist? Does it contain "Extracted from" (Extractor-generated) or not (manually written)?
+   - `output/ui_context.md` — does it exist? Does it contain "Extracted from" (Extractor-generated) or not (manually written)?
    - `input/interview_guide.md` — exists?
    - `input/interviews/` — how many participant folders?
-   - `output/coded/` — how many files?
-   - `output/reconciled/` — how many files?
+   - `output/interviews/coded/` — how many files?
+   - `output/interviews/reconciled/` — how many files?
    - `output/code_mapping.md` — exists?
    - `output/themes.md` — exists? Contains `⚠️ Advocatus` blocks (not yet reviewed)?
    - `output/insights.md` — exists? Contains `⚠️ Advocatus` blocks?
@@ -54,7 +54,7 @@ This project analyzes moderated usability test data (think-aloud protocol, teste
 ## Quick Start
 
 1. Add your website export(s) (HTML) to `input/ui-mockup/` — this is the "User Interface Mockup". Save one HTML export per page participants will interact with (File → Save As in browser, on each relevant page) — a single homepage export only covers what's visible on that page, not the pages it links to
-2. Say **"Extractor, analyze UI"** → generates `input/ui_context.md` from the actual website
+2. Say **"Extractor, analyze UI"** → generates `output/ui_context.md` from the actual website
 3. Put your interview guide in `input/interview_guide.md`
 4. Edit `config.md` with your project details — including **"Analysis output"** under Language to set the output language (e.g. German, English, French)
 5. Place interview transcripts/notes in `input/interviews/participant_XX/` (supported formats: `.md`, `.txt`, `.vtt`)
@@ -68,11 +68,11 @@ Pipeline status and "what's next" is not a separate agent — it's handled autom
 
 | Agent | What it does | Output |
 |---|---|---|
-| **Extractor** | Reads website HTML from `input/ui-mockup/` and generates the UI reference document | `input/ui_context.md` |
-| **Coder** | Codes a single interview (inductive, open coding) | `output/coded/participant_XX.md` |
-| **Reconciler** | Normalizes code labels across all interviews | `output/code_mapping.md` + `output/reconciled/` |
+| **Extractor** | Reads website HTML from `input/ui-mockup/` and generates the UI reference document | `output/ui_context.md` |
+| **Coder** | Codes a single interview (inductive, open coding) | `output/interviews/coded/participant_XX.md` |
+| **Reconciler** | Normalizes code labels across all interviews | `output/code_mapping.md` + `output/interviews/reconciled/` |
 | **Synthesizer** | Clusters codes into themes | `output/themes.md` |
-| **Advocatus** | Devil's advocate — challenges the UI context, themes, and insights with inline annotations | rewrites `input/ui_context.md`, `output/themes.md`, or `output/insights.md` in place |
+| **Advocatus** | Devil's advocate — challenges the UI context, themes, and insights with inline annotations | rewrites `output/ui_context.md`, `output/themes.md`, or `output/insights.md` in place |
 | **Interpreter** | Generates prioritized insights + recommendations | `output/insights.md` |
 | **Reporter** | Assembles the final stakeholder-ready report | `output/report.md` |
 
@@ -88,7 +88,7 @@ Pipeline status and "what's next" is not a separate agent — it's handled autom
 1. Reads `config.md` for the project name and output language
 2. Scans `input/ui-mockup/` for **all** HTML files (one per page you exported) and reads each one
 3. Parses the navigation structure across all of them, plus page names, key components, and interactive elements for each page
-4. Writes `input/ui_context.md` — a shared vocabulary and component map for all downstream agents
+4. Writes `output/ui_context.md` — a shared vocabulary and component map for all downstream agents
 
 **Re-run when**: The UI has changed since the last extraction, or you add/remove a page export.
 
@@ -98,7 +98,7 @@ Pipeline status and "what's next" is not a separate agent — it's handled autom
 - The Naming Conventions table covers everything a participant is likely to touch
 - If `ui_context.md` has a "Missing Page Exports" section, add the missing HTML export(s) and re-run before continuing — otherwise the Coder won't have a canonical name for anything on that page
 
-You can manually edit `input/ui_context.md` after extraction to add context the HTML alone can't reveal (e.g. known bugs, intentionally disabled features in staging).
+You can manually edit `output/ui_context.md` after extraction to add context the HTML alone can't reveal (e.g. known bugs, intentionally disabled features in staging).
 
 ---
 
@@ -107,10 +107,10 @@ You can manually edit `input/ui_context.md` after extraction to add context the 
 **Say:** "Coder, code all interviews"
 
 **What happens:** For each participant folder in `input/interviews/`, spawn a sub-agent using the prompt from `agents/coder.md`. Each sub-agent:
-1. Reads `config.md`, `input/interview_guide.md`, and `input/ui_context.md` for context
+1. Reads `config.md`, `input/interview_guide.md`, and `output/ui_context.md` for context
 2. Reads that participant's transcript and/or notes from `input/interviews/participant_XX/`
 3. Applies open coding (no predefined codebook — codes emerge from the data)
-4. Writes the coded output to `output/coded/participant_XX.md`
+4. Writes the coded output to `output/interviews/coded/participant_XX.md`
 
 All participants are coded **in parallel** (one sub-agent per participant).
 
@@ -131,15 +131,15 @@ All participants are coded **in parallel** (one sub-agent per participant).
 **Say:** "Advocatus, challenge UI context"
 
 **What happens:** A single agent using Mode C from `agents/advocatus.md`:
-1. Reads `input/ui_context.md` and every file in `output/coded/`
+1. Reads `output/ui_context.md` and every file in `output/interviews/coded/`
 2. Cross-checks every **UI Element** reference in the coded files against `ui_context.md`
-3. Appends a single `⚠️ Advocatus — UI Context Review` section to the end of `input/ui_context.md`, flagging missing elements, naming mismatches, undocumented states, and (informationally) orphaned context entries
+3. Appends a single `⚠️ Advocatus — UI Context Review` section to the end of `output/ui_context.md`, flagging missing elements, naming mismatches, undocumented states, and (informationally) orphaned context entries
 4. Does NOT alter any existing content in `ui_context.md` — only appends the review section
 
 **Why this runs here**: The Coder is the only agent besides Interpreter/Reporter that actively reads `ui_context.md` — it copies UI Element names from it into every coded observation. Reconciler and Synthesizer never read `ui_context.md` again; they just pass that UI Element field through unchanged. So any gap or wrong name in `ui_context.md` gets frozen into all coded files right after Stage 1, and nothing downstream re-checks it until Interpreter/Reporter read it again at the very end — too late to fix the coded data itself. Running the check here, right after coding, is the earliest point where real participant data exists to check `ui_context.md` against, and the last point where a fix is still cheap.
 
 **Review the findings.** For each flagged item:
-- Missing element / naming mismatch → edit `input/ui_context.md` directly, then delete that line from the review section
+- Missing element / naming mismatch → edit `output/ui_context.md` directly, then delete that line from the review section
 - Disagree → delete the line without changing `ui_context.md`
 - Orphaned context items are informational only — act on them or ignore them
 - When done, no `⚠️ Advocatus — UI Context Review` section should remain in the file
@@ -153,10 +153,10 @@ If a naming mismatch actually needs a fix in a coded file (not in `ui_context.md
 **Say:** "Reconciler, normalize codes"
 
 **What happens:** A single agent using the prompt from `agents/reconciler.md`:
-1. Reads all files in `output/coded/`
+1. Reads all files in `output/interviews/coded/`
 2. Identifies code labels that describe the same phenomenon across participants
 3. Creates a mapping table and writes it to `output/code_mapping.md`
-4. Produces reconciled coded files in `output/reconciled/participant_XX.md` with canonical labels
+4. Produces reconciled coded files in `output/interviews/reconciled/participant_XX.md` with canonical labels
 5. Flags severity discrepancies (does NOT auto-resolve them)
 
 **Review before proceeding.** Check `output/code_mapping.md`:
@@ -171,7 +171,7 @@ If a naming mismatch actually needs a fix in a coded file (not in `ui_context.md
 **Say:** "Synthesizer, find themes"
 
 **What happens:** A single agent using the prompt from `agents/synthesizer.md`:
-1. Reads all reconciled files from `output/reconciled/`
+1. Reads all reconciled files from `output/interviews/reconciled/`
 2. Reads `input/interview_guide.md` for task context
 3. Clusters codes into themes via affinity mapping
 4. Writes `output/themes.md` with theme cards including frequency, severity, evidence
@@ -207,7 +207,7 @@ If a naming mismatch actually needs a fix in a coded file (not in `ui_context.md
 
 **What happens:** A single agent using the prompt from `agents/interpreter.md`:
 1. Reads `output/themes.md`
-2. Reads `input/interview_guide.md` and `input/ui_context.md`
+2. Reads `input/interview_guide.md` and `output/ui_context.md`
 3. Transforms each theme into a structured insight (observed/because/which means)
 4. Prioritizes using the severity x frequency matrix
 5. Writes `output/insights.md`
@@ -272,7 +272,7 @@ If a naming mismatch actually needs a fix in a coded file (not in `ui_context.md
 1. Duplicate this entire folder
 2. Edit `config.md` with your new project details
 3. Replace the HTML in `input/ui-mockup/` with the new project's website export(s) — one file per page participants will interact with
-4. Say "Extractor, analyze UI" to regenerate `input/ui_context.md`
+4. Say "Extractor, analyze UI" to regenerate `output/ui_context.md`
 5. Replace `input/interview_guide.md` with the new interview protocol
 6. Add participant folders to `input/interviews/`
 7. Clear `output/` (delete all generated files)
@@ -294,11 +294,11 @@ The agent prompts in `agents/` and the report template are project-agnostic.
 - `agents/interpreter.md` — Interpreter agent prompt
 - `agents/reporter.md` — Reporter agent prompt
 - `input/ui-mockup/` — Website HTML export ("User Interface Mockup") — source for Extractor
-- `input/ui_context.md` — Auto-generated UI reference document; also the target of Advocatus Mode C's review section (can be manually edited)
+- `output/ui_context.md` — Auto-generated UI reference document; also the target of Advocatus Mode C's review section (can be manually edited)
 - `input/interview_guide.md` — The interview protocol
 - `input/interviews/participant_XX/` — Raw interview data (transcript.md/vtt, notes.md)
-- `output/coded/` — Raw coded files from Coder
-- `output/reconciled/` — Normalized coded files from Reconciler
+- `output/interviews/coded/` — Raw coded files from Coder
+- `output/interviews/reconciled/` — Normalized coded files from Reconciler
 - `output/code_mapping.md` — Code label mapping table from Reconciler
 - `output/themes.md` — Theme cards from Synthesizer
 - `output/insights.md` — Insight cards from Interpreter

@@ -16,11 +16,11 @@ You run in three modes depending on what you are asked to do.
 
 **Triggered by**: "Advocatus, challenge themes"
 
-**Input**: `output/themes.md` + all reconciled coded files from `output/reconciled/`
+**Input**: `output/themes.md` + all reconciled coded files from `output/interviews/reconciled/`
 
 ### What you do
 
-Read every theme in `output/themes.md`. For each theme, go back to the raw evidence in `output/reconciled/` and interrogate it. Then add an inline challenge annotation directly after the theme's content block.
+Read every theme in `output/themes.md`. For each theme, go back to the raw evidence in `output/interviews/reconciled/` and interrogate it. Then add an inline challenge annotation directly after the theme's content block.
 
 ### Five challenges to raise per theme
 
@@ -138,16 +138,16 @@ Do not alter any existing content in the file — only insert annotation blocks.
 
 **When to run**: After Stage 1 (Coding), before Stage 2 (Reconciliation) — once all interviews are coded but before their observations get merged and abstracted away.
 
-**Input**: `input/ui_context.md` + all coded files from `output/coded/`
+**Input**: `output/ui_context.md` + all coded files from `output/interviews/coded/`
 
 ### Why this mode exists
 
-`input/ui_context.md` is written once by the Extractor from a static HTML export, before any participant had touched the interface. The Coder is the only agent besides Interpreter/Reporter (at the very end) that actively reads it — it copies UI Element names from `ui_context.md`'s Naming Conventions table into every coded observation. Reconciler and Synthesizer never read `ui_context.md` again; they only pass that UI Element field through unchanged (Reconciler's rules explicitly forbid touching it). So if the HTML export missed a component, mislabeled a page, or didn't capture a state (e.g. an error state, a hover interaction, a dynamically rendered element), that gap gets frozen into every coded file right after Stage 1 — and nothing re-checks it until Interpreter/Reporter read `ui_context.md` again at the very end, by which point fixing it means re-coding, not just editing a reference document.
+`output/ui_context.md` is written once by the Extractor from a static HTML export, before any participant had touched the interface. The Coder is the only agent besides Interpreter/Reporter (at the very end) that actively reads it — it copies UI Element names from `ui_context.md`'s Naming Conventions table into every coded observation. Reconciler and Synthesizer never read `ui_context.md` again; they only pass that UI Element field through unchanged (Reconciler's rules explicitly forbid touching it). So if the HTML export missed a component, mislabeled a page, or didn't capture a state (e.g. an error state, a hover interaction, a dynamically rendered element), that gap gets frozen into every coded file right after Stage 1 — and nothing re-checks it until Interpreter/Reporter read `ui_context.md` again at the very end, by which point fixing it means re-coding, not just editing a reference document.
 
 ### What you do
 
-1. Read `input/ui_context.md` in full — the navigation structure, pages, components, patterns, and the Naming Conventions table.
-2. Read every coded file in `output/coded/`. For each observation, look at the **UI Element** field.
+1. Read `output/ui_context.md` in full — the navigation structure, pages, components, patterns, and the Naming Conventions table.
+2. Read every coded file in `output/interviews/coded/`. For each observation, look at the **UI Element** field.
 3. Check each UI Element reference against `ui_context.md`:
    - Does the referenced page/component/element actually appear in `ui_context.md`?
    - If it appears, is it named consistently (same page name, same component name)?
@@ -170,14 +170,14 @@ Optional, lower priority: pages or components listed in `ui_context.md` that no 
 
 ### Output format
 
-Write findings to a new section appended to the end of `input/ui_context.md`, clearly marked so it is easy to remove once resolved:
+Write findings to a new section appended to the end of `output/ui_context.md`, clearly marked so it is easy to remove once resolved:
 
 ```markdown
 ---
 
 ## ⚠️ Advocatus — UI Context Review
 
-**Reviewed against**: output/coded/ (N files, [date])
+**Reviewed against**: output/interviews/coded/ (N files, [date])
 
 ### Missing elements
 
@@ -196,7 +196,7 @@ Write findings to a new section appended to the end of `input/ui_context.md`, cl
 - [Page/component] in ui_context.md has no matching coded observations. No action needed unless this seems like an oversight.
 ```
 
-**Resolve before proceeding to Reconciliation.** For each Missing element or Naming mismatch: edit `input/ui_context.md` directly to fix it, then delete the corresponding line from this review section. If you disagree with a flagged item, delete the line without changing `ui_context.md`. When done, no `⚠️ Advocatus — UI Context Review` section should remain in the file.
+**Resolve before proceeding to Reconciliation.** For each Missing element or Naming mismatch: edit `output/ui_context.md` directly to fix it, then delete the corresponding line from this review section. If you disagree with a flagged item, delete the line without changing `ui_context.md`. When done, no `⚠️ Advocatus — UI Context Review` section should remain in the file.
 
 If a naming mismatch turns out to require correcting a coded file's UI Element field (not just the reference doc), say so explicitly in the finding — you don't edit coded files yourself, but you should point out when the fix belongs there instead of in `ui_context.md`.
 

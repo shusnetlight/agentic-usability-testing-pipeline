@@ -35,7 +35,7 @@ Takes raw interview transcripts, observer notes, and the website's HTML export a
 1. **Duplicate this folder** — copy the entire `agentic-usability-testing-pipeline/` folder and rename it for your project
 2. **Edit `config.md`** — set your project name, product description, and analysis output language
 3. **Add your website to `input/ui-mockup/`** — save each relevant page as a complete HTML page and drop them all in; replace any existing files
-4. **Say `"Extractor, analyze UI"`** — generates `input/ui_context.md` from the actual website code; review and correct if needed
+4. **Say `"Extractor, analyze UI"`** — generates `output/ui_context.md` from the actual website code; review and correct if needed
 5. **Replace `input/interview_guide.md`** — paste in your interview protocol or testing script
 6. **Add interview data** to `input/interviews/` — one subfolder per participant:
    ```
@@ -73,13 +73,13 @@ Pipeline status and "what's next" don't require a dedicated agent — `CLAUDE.md
 
 **Say:** `"Extractor, analyze UI"`
 
-Reads **every** HTML file in `input/ui-mockup/` — one per page you exported — parses the navigation structure across all of them, plus each page's components and interactive elements, and writes `input/ui_context.md`. This gives all downstream agents a shared vocabulary — consistent component names across every coded observation, theme, insight, and report.
+Reads **every** HTML file in `input/ui-mockup/` — one per page you exported — parses the navigation structure across all of them, plus each page's components and interactive elements, and writes `output/ui_context.md`. This gives all downstream agents a shared vocabulary — consistent component names across every coded observation, theme, insight, and report.
 
-**Output:** `input/ui_context.md`
+**Output:** `output/ui_context.md`
 
 **You review:** Check that navigation labels, page names, and component names match what you see in the actual interface. Look for a "Missing Page Exports" section — if a page referenced by your test tasks has no HTML export, add it to `input/ui-mockup/` and re-run before starting Coding. You can also manually add context the HTML alone can't reveal — known bugs, staging-only limitations, or components not visible in the saved export.
 
-Re-run with the same command, `"Extractor, analyze UI"`, if the website changes or you add/remove a page export between research rounds — it overwrites `input/ui_context.md` completely rather than appending, re-scanning all current HTML files from scratch.
+Re-run with the same command, `"Extractor, analyze UI"`, if the website changes or you add/remove a page export between research rounds — it overwrites `output/ui_context.md` completely rather than appending, re-scanning all current HTML files from scratch.
 
 ---
 
@@ -89,7 +89,7 @@ Re-run with the same command, `"Extractor, analyze UI"`, if the website changes 
 
 One sub-agent per participant runs in parallel. Each reads the interview guide, the UI context, and the participant's files. It detects the interview language automatically and codes in that language — so a German interview is coded in German, an English one in English.
 
-**Output:** `output/coded/participant_XX.md` — one file per participant.
+**Output:** `output/interviews/coded/participant_XX.md` — one file per participant.
 
 Each observation looks like this:
 
@@ -114,9 +114,9 @@ Each observation looks like this:
 
 **Say:** `"Advocatus, challenge UI context"`
 
-`input/ui_context.md` was written once by the Extractor from a static HTML export, before any participant touched the interface. The Coder is the only agent (besides Interpreter/Reporter at the very end) that actively reads it — copying UI Element names into every coded observation. Reconciler and Synthesizer never read `ui_context.md` again; they just pass that field through unchanged. So this step — right after coding — is the earliest point where real participant data exists to check `ui_context.md` against, and the last point where a fix is still cheap rather than requiring a re-code.
+`output/ui_context.md` was written once by the Extractor from a static HTML export, before any participant touched the interface. The Coder is the only agent (besides Interpreter/Reporter at the very end) that actively reads it — copying UI Element names into every coded observation. Reconciler and Synthesizer never read `ui_context.md` again; they just pass that field through unchanged. So this step — right after coding — is the earliest point where real participant data exists to check `ui_context.md` against, and the last point where a fix is still cheap rather than requiring a re-code.
 
-**Output:** Appends a single `⚠️ Advocatus — UI Context Review` section to the end of `input/ui_context.md`, flagging:
+**Output:** Appends a single `⚠️ Advocatus — UI Context Review` section to the end of `output/ui_context.md`, flagging:
 - **Missing elements** — things participants clearly interacted with that aren't described anywhere in `ui_context.md`
 - **Naming mismatches** — the same element called different names across coded files and the reference doc
 - **Undocumented states** — error/empty/loading/staging-only states participants ran into that aren't listed under Known UI States (important: this is often the difference between a real design flaw and a staging artifact)
@@ -136,7 +136,7 @@ Reads all coded files, identifies labels that describe the same phenomenon acros
 
 **Output:**
 - `output/code_mapping.md` — mapping table with rationale and ⚠️ severity discrepancy flags
-- `output/reconciled/participant_XX.md` — coded files with canonical labels applied
+- `output/interviews/reconciled/participant_XX.md` — coded files with canonical labels applied
 
 Each canonical code block looks like this:
 
@@ -149,7 +149,7 @@ Each canonical code block looks like this:
 **Severity discrepancy**: ⚠️ Yes — P01=3, P03=4, P04=3 → please review before synthesis
 ```
 
-**You review:** Approve or adjust the mappings. Resolve any ⚠️ severity discrepancies — you were in the room, you decide. After editing `code_mapping.md` by hand, say `"Reconciler, re-apply mapping"` to mechanically propagate your corrected groupings into `output/reconciled/` without re-clustering from scratch. (Only say `"Reconciler, normalize codes"` again if you actually want a full re-cluster from the raw data — that overwrites your edits.)
+**You review:** Approve or adjust the mappings. Resolve any ⚠️ severity discrepancies — you were in the room, you decide. After editing `code_mapping.md` by hand, say `"Reconciler, re-apply mapping"` to mechanically propagate your corrected groupings into `output/interviews/reconciled/` without re-clustering from scratch. (Only say `"Reconciler, normalize codes"` again if you actually want a full re-cluster from the raw data — that overwrites your edits.)
 
 ---
 
@@ -346,14 +346,15 @@ agentic-usability-testing-pipeline/
 │   │   ├── [sub-page].html      ← e.g. a product page, checkout, etc. — only if participants navigate there
 │   │   └── [sub-page]_files/
 │   ├── interview_guide.md       ← your testing script / interview protocol
-│   ├── ui_context.md            ← auto-generated by Extractor; can be manually edited
 │   └── interviews/
 │       └── participant_XX/      ← one folder per participant
 │           ├── transcript.vtt   ← supports .vtt, .md, .txt
 │           └── notes.md
 ├── output/                      ← generated during analysis; clear between projects
-│   ├── coded/                   ← Coder output
-│   ├── reconciled/              ← Reconciler output
+│   ├── ui_context.md            ← auto-generated by Extractor; can be manually edited
+│   ├── interviews/
+│   │   ├── coded/               ← Coder output
+│   │   └── reconciled/          ← Reconciler output
 │   ├── code_mapping.md          ← Reconciler mapping table
 │   ├── themes.md                ← Synthesizer output
 │   ├── insights.md              ← Interpreter output
@@ -369,7 +370,7 @@ agentic-usability-testing-pipeline/
 1. Duplicate this folder
 2. Edit `config.md` (project name, product description, output language)
 3. Replace the HTML in `input/ui-mockup/` with the new project's website export(s) — one file per page participants will interact with
-4. Say `"Extractor, analyze UI"` to regenerate `input/ui_context.md`
+4. Say `"Extractor, analyze UI"` to regenerate `output/ui_context.md`
 5. Replace `input/interview_guide.md` with the new interview protocol
 6. Add participant folders to `input/interviews/`
 7. Clear everything in `output/`

@@ -6,7 +6,7 @@ Before writing anything, read the transcript and notes for this participant and 
 
 **Write your entire coded output — all headings, code labels, descriptions, and summaries — in the language of the interview.** If the participant spoke German, code in German. If they spoke English, code in English.
 
-The only exceptions are: verbatim participant quotes, which always remain in the language they were spoken regardless of any other setting, and the **UI Element** field, which always uses the platform's actual label as found in `input/ui_context.md` — never translated, even when the interview language differs from the platform's UI language (see "UI Element field and language" under How to Code below).
+The only exceptions are: verbatim participant quotes, which always remain in the language they were spoken regardless of any other setting, and the **UI Element** field, which always uses the platform's actual label as found in `output/ui_context.md` — never translated, even when the interview language differs from the platform's UI language (see "UI Element field and language" under How to Code below).
 
 Note the detected language in the file header (see output format below) so downstream agents know which language was used.
 
@@ -33,7 +33,7 @@ You follow Open Coding as described in Grounded Theory (Glaser & Strauss, 1967):
 Read the following files to build context:
 1. `config.md` — project details, severity scale, additional context
 2. `input/interview_guide.md` — the interview protocol (understand what tasks the participant was asked to perform and what was being evaluated)
-3. `input/ui_context.md` — description of the UI being tested (understand what screens, components, and interactions exist so participant references make sense)
+3. `output/ui_context.md` — description of the UI being tested (understand what screens, components, and interactions exist so participant references make sense)
 
 ## Input
 
@@ -82,9 +82,9 @@ For each meaningful observation in the interview data:
 
 3. **Identify the task area** — which task from the interview guide this observation occurred during (e.g., "Task 1 — Home", "Task 6 — Opportunities"). If the observation is not tied to a specific task, use "General".
 
-4. **Identify the UI element** — the specific screen, component, or interaction the participant was engaging with. Use the format: `Page > Component > Element` (e.g., "News & Podcast > Filter bar > Category tags", "Financing > Card grid > Card flip interaction"). Refer to `input/ui_context.md` to use consistent naming.
+4. **Identify the UI element** — the specific screen, component, or interaction the participant was engaging with. Use the format: `Page > Component > Element` (e.g., "News & Podcast > Filter bar > Category tags", "Financing > Card grid > Card flip interaction"). Refer to `output/ui_context.md` to use consistent naming.
 
-   **UI Element field and language**: Always write the canonical label from `input/ui_context.md`'s Naming Conventions table, in whatever language the platform actually uses — regardless of the interview language. Participants often refer to an element by translating it into their own language, paraphrasing it, or mixing in the original-language term (e.g. a German-speaking participant might say "Chancen", "der Bereich mit den Hackathons", or the English "Opportunities" itself — all pointing at the same nav item that `ui_context.md` lists as "Opportunities"). Recognize which real element they mean and put the canonical label in the UI Element field — never the participant's translation or paraphrase. The verbatim quote field is unaffected by this: it still captures exactly what the participant said, in their own words. If you're genuinely unsure which element a participant meant, choose the closest match and note the uncertainty in the Summary section rather than guessing silently.
+   **UI Element field and language**: Always write the canonical label from `output/ui_context.md`'s Naming Conventions table, in whatever language the platform actually uses — regardless of the interview language. Participants often refer to an element by translating it into their own language, paraphrasing it, or mixing in the original-language term (e.g. a German-speaking participant might say "Chancen", "der Bereich mit den Hackathons", or the English "Opportunities" itself — all pointing at the same nav item that `ui_context.md` lists as "Opportunities"). Recognize which real element they mean and put the canonical label in the UI Element field — never the participant's translation or paraphrase. The verbatim quote field is unaffected by this: it still captures exactly what the participant said, in their own words. If you're genuinely unsure which element a participant meant, choose the closest match and note the uncertainty in the Summary section rather than guessing silently.
 
 5. **Rate severity** using Nielsen's scale (from config.md):
    - 0 = Not a usability problem
@@ -99,7 +99,7 @@ For each meaningful observation in the interview data:
 
 ## Output Format
 
-Write your output to `output/coded/participant_XX.md` using this exact format.
+Write your output to `output/interviews/coded/participant_XX.md` using this exact format.
 
 **If the source is plain text (`.md` or `.txt`):**
 
